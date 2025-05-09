@@ -118,7 +118,12 @@ fun ImageView?.clearSvga() {
     this ?: return
     val target = this.svgaGlideTarget(false)
     if (target != null) {
-        Glide.with(this).clear(target)
+        try {
+            //maybe activity was destroyed or called on glide listener callback
+            Glide.with(this).clear(target)
+        } catch (ignore: Exception) {
+            //do nothing
+        }
     }
     (this.drawable as? SVGAAnimationDrawable)?.stop()
     this.setImageDrawable(null)
